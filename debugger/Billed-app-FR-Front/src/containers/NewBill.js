@@ -48,17 +48,10 @@ export default class NewBill {
         .catch((error) => console.error(error));
     } else {
       errorMessage.innerHTML = "Les extensions acceptées sont jpg, jpeg et png";
-      // file.value = "";
-      // submit.addEventListener("submit", (event) => {
-      //   event.preventDefault();
-      // });
     }
   };
   handleSubmit = (e) => {
-    // const filePath = e.target.value.split(/\\/g);
-    // const fileName = filePath[filePath.length - 1];
-    // const fileFormat = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
-    // if (fileFormat === "jpg" || fileFormat === "jpeg" || fileFormat === "png") {
+    //changement
     e.preventDefault();
     if (this.fileUrl === null) {
       return;
@@ -81,9 +74,6 @@ export default class NewBill {
     };
     this.updateBill(bill);
     this.onNavigate(ROUTES_PATH["Bills"]);
-    // } else {
-
-    // }
   };
 
   // not need to cover this function by tests

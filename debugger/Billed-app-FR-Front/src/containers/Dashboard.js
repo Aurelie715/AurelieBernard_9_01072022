@@ -82,8 +82,12 @@ export default class {
   };
 
   handleEditTicket(e, bill, bills) {
+    console.log(bill);
+    // ajout (this.index !== undefined) ligne en dessous
     if (this.counter === undefined || this.id !== bill.id) this.counter = 0;
-    if (this.id === undefined || this.id !== bill.id) this.id = bill.id;
+    // || this.index !== undefined
+    // if (this.id === undefined || this.id !== bill.id)
+    this.id = bill.id;
     if (this.counter % 2 === 0) {
       bills.forEach((b) => {
         $(`#open-bill${b.id}`).css({ background: "#0D5AE5" });
@@ -142,7 +146,6 @@ export default class {
     bills.forEach((bill) => {
       $(`#open-bill${bill.id}`)
         .off()
-        .on()
         .click((e) => this.handleEditTicket(e, bill, bills));
     });
 
