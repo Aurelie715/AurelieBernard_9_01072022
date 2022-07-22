@@ -5,11 +5,13 @@
 import { screen, waitFor } from "@testing-library/dom";
 import BillsUI from "../views/BillsUI.js";
 import { bills } from "../fixtures/bills.js";
-import { ROUTES_PATH } from "../constants/routes.js";
+import { ROUTES, ROUTES_PATH } from "../constants/routes.js";
 import { localStorageMock } from "../__mocks__/localStorage.js";
 import mockStore from "../__mocks__/store";
-
+import userEvent from "@testing-library/user-event";
 import router from "../app/Router.js";
+import Bills from "../containers/Bills.js";
+import "@testing-library/jest-dom";
 
 jest.mock("../app/store", () => mockStore);
 
@@ -45,7 +47,40 @@ describe("Given I am connected as an employee", () => {
   });
 });
 
-// // test d'intégration GET
+// test si on clique sur l'icône eye que la modale apparaît
+describe("when I click the icon eye", () => {
+  test("a modal should appears", async () => {
+    const onNavigate = (pathname) => {
+      document.body.innerHTML = ROUTES({ pathname });
+    };
+    Object.defineProperty(window, "localStorage", { value: localStorageMock });
+    window.localStorage.setItem(
+      "user",
+      JSON.stringify({
+        type: "Employee",
+      })
+    );
+    const billsInitialization = new Bills({
+      document,
+      onNavigate,
+      store: null,
+      localStorage: window.localStorage,
+    });
+    document.body.innerHTML = BillsUI({ data: bills });
+    const handleClickIconEye = jest.fn((icon) => billsInitialization.handleClickIconEye(icon));
+    const eye = screen.getAllByTestId("icon-eye");
+    const modaleFile = document.getElementById("modaleFile");
+    $.fn.modal = jest.fn(() => modaleFile.classList.add("show"));
+    eye.forEach((icon) => {
+      icon.addEventListener("click", handleClickIconEye(icon));
+      userEvent.click(icon);
+      expect(handleClickIconEye).toHaveBeenCalled();
+    });
+    expect(modaleFile).toHaveClass("show");
+  });
+});
+
+// test d'intégration GET
 
 describe("Given I am a user connected as Employee", () => {
   describe("When I navigate to Bills", () => {
