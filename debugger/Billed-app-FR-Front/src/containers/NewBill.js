@@ -18,12 +18,14 @@ export default class NewBill {
   handleChangeFile = (e) => {
     e.preventDefault();
     const file = this.document.querySelector(`input[data-testid="file"]`).files[0];
-    const filePath = e.target.value.split(/\\/g);
-    const fileName = filePath[filePath.length - 1];
+    // console.log(e.target, e.target.value);
+    // const filePath = e.target.value.split(/\\/g);
+    // const fileName = filePath[filePath.length - 1];
+    const fileName = file.name;
     const fileFormat = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
     const errorMessage = this.document.querySelector("#error-message");
     // const submit = this.document.querySelector("btn-send-bill");
-    console.log(fileFormat);
+    // console.log(file, filePath, fileName);
     const formData = new FormData();
     const email = JSON.parse(localStorage.getItem("user")).email;
     formData.append("file", file);
