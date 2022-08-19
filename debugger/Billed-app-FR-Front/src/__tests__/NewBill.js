@@ -107,10 +107,17 @@ describe("Given I am a user connected as an Employee", () => {
       const fakeFile = new File(["image"], "image.jpg", { type: "image/jpg" });
       // const form = screen.getByTestId("form-new-bill");
       const fileInput = screen.getByTestId("file");
+      const typeOfSpending = (screen.getByTestId("expense-type").value = "Transports");
+      const spendingName = (screen.getByTestId("expense-name").value = "Hotel Paris");
+      const date = (screen.getByTestId("datepicker").value = "12/03/2021");
+      const amount = (screen.getByTestId("amount").value = "500");
+      const vat = (screen.getByTestId("vat").value = "20");
+      const pct = (screen.getByTestId("pct").value = "20");
+      const comment = (screen.getByTestId("commentary").value = "blabla");
       const handleChangeFile = jest.fn((e) => newBill.handleChangeFile(e));
 
       fileInput.addEventListener("change", handleChangeFile);
-      userEvent.upload(fileInput, fakeFile);
+      userEvent.upload(fileInput, fakeFile, typeOfSpending, spendingName, date, amount, vat, pct, comment);
 
       expect(fileInput.files[0].name).toBeDefined();
       expect(handleChangeFile).toBeCalled();
