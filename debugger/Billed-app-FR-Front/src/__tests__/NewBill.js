@@ -15,111 +15,111 @@ import router from "../app/Router.js";
 jest.mock("../app/Store", () => mockStore);
 global.alert = jest.fn();
 
-// describe("Given I am connected as an employee", () => {
-//   describe("When I am on NewBill Page", () => {
-//     // test("Then message icon in vertical layout should be higlighted", async () => {
-//     //   // const html = NewBillUI();
-//     //   // document.body.innerHTML = html;
-//     //   //to-do write assertion
-//     //   Object.defineProperty(window, "localStorage", { value: localStorageMock });
-//     //   window.localStorage.setItem(
-//     //     "user",
-//     //     JSON.stringify({
-//     //       type: "Employee",
-//     //     })
-//     //   );
-//     //   const root = document.createElement("div");
-//     //   root.setAttribute("id", "root");
-//     //   document.body.append(root);
-//     //   router();
-//     //   window.onNavigate(ROUTES_PATH.NewBill);
-//     //   await waitFor(() => screen.getByTestId("icon-mail"));
-//     //   const windowIcon = screen.getByTestId("icon-mail");
-//     //   expect(windowIcon.classList.contains("active-icon")).toBe(true);
-//     // });
-//   });
+describe("Given I am connected as an employee", () => {
+  describe("When I am on NewBill Page", () => {
+    test("Then message icon in vertical layout should be higlighted", async () => {
+      // const html = NewBillUI();
+      // document.body.innerHTML = html;
+      //to-do write assertion
+      Object.defineProperty(window, "localStorage", { value: localStorageMock });
+      window.localStorage.setItem(
+        "user",
+        JSON.stringify({
+          type: "Employee",
+        })
+      );
+      const root = document.createElement("div");
+      root.setAttribute("id", "root");
+      document.body.append(root);
+      router();
+      window.onNavigate(ROUTES_PATH.NewBill);
+      await waitFor(() => screen.getByTestId("icon-mail"));
+      const windowIcon = screen.getByTestId("icon-mail");
+      expect(windowIcon.classList.contains("active-icon")).toBe(true);
+    });
+  });
 
-//   // describe("when I choose a file", () => {
-//   //   test("it should be in the right format", () => {
-//   //     // jest.spyOn(mockStore, "bills");
+  // describe("when I choose a file", () => {
+  //   test("it should be in the right format", () => {
+  //     // jest.spyOn(mockStore, "bills");
 
-//   //     const onNavigate = (pathname) => {
-//   //       document.body.innerHTML = ROUTES({ pathname });
-//   //     };
-//   //     Object.defineProperty(window, "localStorage", { value: localStorageMock });
-//   //     window.localStorage.setItem(
-//   //       "user",
-//   //       JSON.stringify({
-//   //         type: "Employee",
-//   //       })
-//   //     );
-//   //     document.body.innerHTML = NewBillUI();
-//   //     const newBill = new NewBill({
-//   //       document,
-//   //       onNavigate,
-//   //       store: mockStore,
-//   //       localStorage,
-//   //     });
-//   //     const fakeFile = new File(["image"], "image.jpg", { type: "image/jpg" });
-//   //     // const form = screen.getByTestId("form-new-bill");
-//   //     const fileInput = screen.getByTestId("file");
-//   //     const handleChangeFile = jest.fn((e) => newBill.handleChangeFile(e));
+  //     const onNavigate = (pathname) => {
+  //       document.body.innerHTML = ROUTES({ pathname });
+  //     };
+  //     Object.defineProperty(window, "localStorage", { value: localStorageMock });
+  //     window.localStorage.setItem(
+  //       "user",
+  //       JSON.stringify({
+  //         type: "Employee",
+  //       })
+  //     );
+  //     document.body.innerHTML = NewBillUI();
+  //     const newBill = new NewBill({
+  //       document,
+  //       onNavigate,
+  //       store: mockStore,
+  //       localStorage,
+  //     });
+  //     const fakeFile = new File(["image"], "image.jpg", { type: "image/jpg" });
+  //     // const form = screen.getByTestId("form-new-bill");
+  //     const fileInput = screen.getByTestId("file");
+  //     const handleChangeFile = jest.fn((e) => newBill.handleChangeFile(e));
 
-//   //     fileInput.addEventListener("change", handleChangeFile);
-//   //     userEvent.upload(fileInput, fakeFile);
+  //     fileInput.addEventListener("change", handleChangeFile);
+  //     userEvent.upload(fileInput, fakeFile);
 
-//   //     expect(fileInput.files[0].name).toBeDefined();
-//   //     expect(handleChangeFile).toBeCalled();
-//   //   });
-//   // });
-// });
+  //     expect(fileInput.files[0].name).toBeDefined();
+  //     expect(handleChangeFile).toBeCalled();
+  //   });
+  // });
+});
 
 // test d'intégration POST
 
 describe("Given I am a user connected as an Employee", () => {
   describe("When I am on NewBill Page and I click on send button of a completed form", () => {
-    // test("should submit bills from mock api post", async () => {
-    //   localStorage.setItem("user", JSON.stringify({ type: "Employee", email: "a@a" }));
-    //   const root = document.createElement("div");
-    //   root.setAttribute("id", "root");
-    //   document.body.append(root);
-    //   router();
-    //   window.onNavigate(ROUTES_PATH.NewBill);
+    test("should submit bills from mock api post", async () => {
+      localStorage.setItem("user", JSON.stringify({ type: "Employee", email: "a@a" }));
+      const root = document.createElement("div");
+      root.setAttribute("id", "root");
+      document.body.append(root);
+      router();
+      window.onNavigate(ROUTES_PATH.NewBill);
 
-    //   const onNavigate = (pathname) => {
-    //     document.body.innerHTML = ROUTES({ pathname });
-    //   };
-    //   Object.defineProperty(window, "localStorage", { value: localStorageMock });
-    //   window.localStorage.setItem(
-    //     "user",
-    //     JSON.stringify({
-    //       type: "Employee",
-    //     })
-    //   );
-    //   document.body.innerHTML = NewBillUI();
-    //   const newBill = new NewBill({
-    //     document,
-    //     onNavigate,
-    //     store: mockStore,
-    //     localStorage,
-    //   });
-    //   const fakeFile = new File(["image"], "image.jpg", { type: "image/jpg" });
-    //   // const form = screen.getByTestId("form-new-bill");
-    //   const fileInput = screen.getByTestId("file");
+      const onNavigate = (pathname) => {
+        document.getElementById("root").innerHTML = ROUTES({ pathname });
+      };
+      Object.defineProperty(window, "localStorage", { value: localStorageMock });
+      window.localStorage.setItem(
+        "user",
+        JSON.stringify({
+          type: "Employee",
+        })
+      );
+      document.getElementById("root").innerHTML = NewBillUI();
+      const newBill = new NewBill({
+        document,
+        onNavigate,
+        store: mockStore,
+        localStorage,
+      });
+      const fakeFile = new File(["image"], "image.jpg", { type: "image/jpg" });
+      // const form = screen.getByTestId("form-new-bill");
+      const fileInput = screen.getByTestId("file");
 
-    //   const handleChangeFile = jest.fn((e) => newBill.handleChangeFile(e));
+      const handleChangeFile = jest.fn((e) => newBill.handleChangeFile(e));
 
-    //   fileInput.addEventListener("change", handleChangeFile);
-    //   userEvent.upload(fileInput, fakeFile);
+      fileInput.addEventListener("change", handleChangeFile);
+      userEvent.upload(fileInput, fakeFile);
 
-    //   expect(fileInput.files[0].name).toBeDefined();
-    //   expect(handleChangeFile).toBeCalled();
+      expect(fileInput.files[0].name).toBeDefined();
+      expect(handleChangeFile).toBeCalled();
 
-    //   const handleSubmit = jest.fn((e) => newBill.handleSubmit(e));
-    //   fileInput.addEventListener("submit", handleSubmit);
-    //   fireEvent.submit(fileInput);
-    //   expect(handleSubmit).toBeCalled();
-    // });
+      const handleSubmit = jest.fn((e) => newBill.handleSubmit(e));
+      fileInput.addEventListener("submit", handleSubmit);
+      fireEvent.submit(fileInput);
+      expect(handleSubmit).toBeCalled();
+    });
     describe("When an error occurs on API", () => {
       beforeEach(() => {
         console.error = jest.fn();
@@ -138,6 +138,7 @@ describe("Given I am a user connected as an Employee", () => {
         router();
       });
       test("fetches bills from an API and fails with 404 message error", async () => {
+        // console.log("test sdfgsrtdhtyjgdhjrtdy");
         mockStore.bills.mockImplementationOnce(() => {
           return {
             update: () => {
@@ -149,18 +150,46 @@ describe("Given I am a user connected as an Employee", () => {
         const newBill = new NewBill({
           document,
           onNavigate,
-          mockStore,
+          store: mockStore,
           localStorage: window.localStorage,
         });
-        const form = screen.getByTestId("form-new-bill");
+        newBill.fileUrl = "test";
+
+        const form = screen.getAllByTestId("form-new-bill")[0];
         const handleSubmit = jest.fn((e) => newBill.handleSubmit(e));
         form.addEventListener("submit", handleSubmit);
         fireEvent.submit(form);
         expect(handleSubmit).toHaveBeenCalled();
         await new Promise(process.nextTick);
-        console.log(console.error);
-        // expect(console.error).toHaveBeenCalledWith(new Error("Erreur 404"));
+        // console.log(console.error);
+        expect(console.error).toHaveBeenCalledWith(new Error("Erreur 404"));
       });
+      test("fetches bills from an API and fails with 500 message error", async () => {
+        mockStore.bills.mockImplementationOnce(() => {
+          return {
+            update: () => {
+              return Promise.reject(new Error("Erreur 500"));
+            },
+          };
+        });
+        window.onNavigate(ROUTES_PATH.NewBill);
+        const newBill = new NewBill({
+          document,
+          onNavigate,
+          store: mockStore,
+          localStorage: window.localStorage,
+        });
+        newBill.fileUrl = "test";
+        const form = screen.getAllByTestId("form-new-bill")[0];
+        const handleSubmit = jest.fn((e) => newBill.handleSubmit(e));
+        form.addEventListener("submit", handleSubmit);
+        fireEvent.submit(form);
+        expect(handleSubmit).toHaveBeenCalled();
+        await new Promise(process.nextTick);
+        // console.log(console.error);
+        expect(console.error).toHaveBeenCalledWith(new Error("Erreur 500"));
+      });
+
       // test("fetches messages from an API and fails with 500 message error", async () => {
       //   mockStore.bills.mockImplementationOnce(() => {
       //     return {
