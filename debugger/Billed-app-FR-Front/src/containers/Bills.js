@@ -4,7 +4,6 @@ import Logout from "./Logout.js";
 
 export default class {
   constructor({ document, onNavigate, store, localStorage }) {
-    console.log(document);
     this.document = document;
     this.onNavigate = onNavigate;
     this.store = store;

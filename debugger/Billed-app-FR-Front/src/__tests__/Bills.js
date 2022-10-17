@@ -36,7 +36,7 @@ describe("Given I am connected as an employee", () => {
       expect(windowIcon.classList.contains("active-icon")).toBe(true);
     });
     test("Then bills should be ordered from earliest to latest", () => {
-      //modification ici
+      //modification sortedBills
       const sortedBills = bills.sort((a, b) => (a.date < b.date ? 1 : -1));
       document.body.innerHTML = BillsUI({ data: sortedBills });
       const dates = screen.getAllByText(/^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$/i).map((a) => a.innerHTML);
@@ -47,9 +47,9 @@ describe("Given I am connected as an employee", () => {
   });
 });
 
-// test si on clique sur l'icône eye que la modale apparaît
-describe("when I click the icon eye", () => {
-  test("a modal should appears", async () => {
+// test si on clique sur l'icône eye alors la modale apparaît
+describe("when I click the eye icon", () => {
+  test("a modal should appear", async () => {
     const onNavigate = (pathname) => {
       document.body.innerHTML = ROUTES({ pathname });
     };
