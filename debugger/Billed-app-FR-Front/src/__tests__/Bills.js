@@ -36,10 +36,11 @@ describe("Given I am connected as an employee", () => {
       expect(windowIcon.classList.contains("active-icon")).toBe(true);
     });
     test("Then bills should be ordered from earliest to latest", () => {
-      //modification sortedBills
-      const sortedBills = bills.sort((a, b) => (a.date < b.date ? 1 : -1));
-      document.body.innerHTML = BillsUI({ data: sortedBills });
+      //construction du DOM
+      document.body.innerHTML = BillsUI({ data: bills });
+      //récupère toutes les dates écrites de cette façon
       const dates = screen.getAllByText(/^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$/i).map((a) => a.innerHTML);
+      //tri les dates par ordre décroissant
       const antiChrono = (a, b) => (a < b ? 1 : -1);
       const datesSorted = [...dates].sort(antiChrono);
       expect(dates).toEqual(datesSorted);
@@ -85,41 +86,37 @@ describe("when I click the eye icon", () => {
 describe("Given I am a user connected as Employee", () => {
   describe("When I navigate to Bills", () => {
     test("fetches bills from mock API GET", async () => {
+      // création du localStorage avec le profil employé
       localStorage.setItem("user", JSON.stringify({ type: "Employee", email: "a@a" }));
+      //création du DOM
       const root = document.createElement("div");
       root.setAttribute("id", "root");
       document.body.append(root);
       router();
       window.onNavigate(ROUTES_PATH.Bills);
+      // vérifie que mes notes de frais s'affiche sur l'écran
       await waitFor(() => expect(screen.getByText("Mes notes de frais")).toBeTruthy());
     });
     describe("When an error occurs on API", () => {
       beforeEach(() => {
         jest.spyOn(mockStore, "bills");
-        Object.defineProperty(window, "localStorage", { value: localStorageMock });
-        window.localStorage.setItem(
-          "user",
-          JSON.stringify({
-            type: "Employee",
-            email: "a@a",
-          })
-        );
-        const root = document.createElement("div");
-        root.setAttribute("id", "root");
-        document.body.appendChild(root);
-        router();
       });
       test("fetches bills from an API and fails with 404 message error", async () => {
         mockStore.bills.mockImplementationOnce(() => {
           return {
             list: () => {
+              //simuler erreur 404 en réponse à la promesse
               return Promise.reject(new Error("Erreur 404"));
             },
           };
         });
+        //rediriger vers bills
         window.onNavigate(ROUTES_PATH.Bills);
+        //attend réponse de la promesse
         await new Promise(process.nextTick);
+        //on attend le chargement de la page
         const message = await screen.getByText(/Erreur 404/);
+        //On vérifie qu'on a bien le message erreur 404
         expect(message).toBeTruthy();
       });
 
