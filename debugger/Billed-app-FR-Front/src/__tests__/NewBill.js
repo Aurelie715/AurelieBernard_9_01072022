@@ -45,6 +45,7 @@ describe("Given I am a user connected as an Employee", () => {
       root.setAttribute("id", "root");
       document.body.append(root);
 
+      //simule la connection d'un utilisateur
       Object.defineProperty(window, "localStorage", { value: localStorageMock });
       window.localStorage.setItem(
         "user",
@@ -53,15 +54,17 @@ describe("Given I am a user connected as an Employee", () => {
           email: "a@a",
         })
       );
+      //met le html dans la div root
       document.getElementById("root").innerHTML = NewBillUI();
-      //crée un mock de mockstore.bills et garde l'implémentation de mockedBills
+      //crée un mock de mockstore.bills et garde l'implémentation du store de bills
       jest.spyOn(mockStore, "bills");
     });
 
     test("should be able to upload a jpg image", async () => {
-      //crée un mock pour la méthode create
+      //crée un mock pour la méthode create (fonction asynchrone)
       const createMock = jest.fn().mockResolvedValue({ fileUrl: "image.jpg" });
       const updateMock = jest.fn().mockResolvedValue({});
+      //on change l'implémentation du store mocké une fois
       mockStore.bills
         .mockImplementationOnce(() => {
           return {
@@ -88,15 +91,21 @@ describe("Given I am a user connected as an Employee", () => {
       //On va chercher file Input sur la page
       const fileInput = screen.getByTestId("file");
 
+      //déclenche l'upload du fichier image.jpg dans l'input
       userEvent.upload(fileInput, fakeFilejpg);
 
       expect(fileInput.files[0].name).toBeDefined();
+      //teste que la méthode create a bien été appelée
       expect(createMock).toHaveBeenCalled();
 
+      //permet d'attendre que la promesse de create soit résolue(la fin de l'upload) avant de passer à la suite
       await new Promise(process.nextTick);
 
+      //On va chercher le formulaire
       const form = screen.getByTestId("form-new-bill");
+      //déclenche le submit sur le formulaire
       fireEvent.submit(form);
+      //teste que la méthode update a bien été appelée
       expect(updateMock).toHaveBeenCalled();
     });
 
@@ -215,6 +224,7 @@ describe("Given I am a user connected as an Employee", () => {
       expect(updateMock).not.toHaveBeenCalled();
     });
 
+    //on détruit le mock à cause de test PDF car il ne va pas appeler les méthodes create et update
     afterEach(() => {
       mockStore.bills.mockRestore();
     });
@@ -288,131 +298,3 @@ describe("Given I am a user connected as an Employee", () => {
     });
   });
 });
-
-// describe("Given I am a user connected as an Employee", () => {
-//   describe("When I am on NewBill Page and I click on send button of a completed form", () => {
-//     test("should submit bills from mock api post", async () => {
-//       //initialisation de la page
-//       const root = document.createElement("div");
-//       root.setAttribute("id", "root");
-//       document.body.append(root);
-
-//       const onNavigate = (pathname) => {
-//         document.getElementById("root").innerHTML = ROUTES({ pathname });
-//       };
-//       Object.defineProperty(window, "localStorage", { value: localStorageMock });
-//       window.localStorage.setItem(
-//         "user",
-//         JSON.stringify({
-//           type: "Employee",
-//           email: "a@a",
-//         })
-//       );
-//       document.getElementById("root").innerHTML = NewBillUI();
-//       const newBill = new NewBill({
-//         document,
-//         onNavigate,
-//         store: mockStore,
-//         localStorage,
-//       });
-
-//       //test
-//       //On crée un faux fichier jpg
-//       const fakeFilejpg = new File(["image"], "image.jpg", { type: "image/jpg" });
-//       //On va chercher file Input sur la page
-//       const fileInput = screen.getByTestId("file");
-//       //mock la fonction handleChangeFile
-//       const handleChangeFile = jest.fn((e) => newBill.handleChangeFile(e));
-
-//       fileInput.addEventListener("change", handleChangeFile);
-//       userEvent.upload(fileInput, fakeFilejpg);
-
-//       expect(fileInput.files[0].name).toBeDefined();
-//       expect(handleChangeFile).toBeCalled();
-
-//       const fakeFilePng = new File(["image"], "image.png", { type: "image/png" });
-//       //utilise la library jest pour upl
-//       userEvent.upload(fileInput, fakeFilePng);
-
-//       expect(fileInput.files[0].name).toBeDefined();
-//       expect(handleChangeFile).toBeCalled();
-
-//       const fakeFilePdf = new File(["image"], "image.pdf", { type: "image/pdf" });
-//       userEvent.upload(fileInput, fakeFilePdf);
-//       expect(fileInput.files[0].name).toBeDefined();
-//       await waitFor(() => expect(screen.getByText("Les extensions acceptées sont jpg, jpeg et png")).toBeTruthy());
-
-//       const handleSubmit = jest.fn((e) => newBill.handleSubmit(e));
-//       fileInput.addEventListener("submit", handleSubmit);
-//       fireEvent.submit(fileInput);
-//       expect(handleSubmit).toBeCalled();
-//     });
-//     describe("When an error occurs on API", () => {
-//       beforeEach(() => {
-//         console.error = jest.fn();
-//         console.error.mockClear();
-//         jest.spyOn(mockStore, "bills");
-//         Object.defineProperty(window, "localStorage", { value: localStorageMock });
-//         window.localStorage.setItem(
-//           "user",
-//           JSON.stringify({
-//             type: "Employee",
-//           })
-//         );
-//         const root = document.createElement("div");
-//         root.setAttribute("id", "root");
-//         document.body.appendChild(root);
-//         router();
-//       });
-//       test("fetches bills from an API and fails with 404 message error", async () => {
-//         mockStore.bills.mockImplementationOnce(() => {
-//           return {
-//             update: () => {
-//               return Promise.reject(new Error("Erreur 404"));
-//             },
-//           };
-//         });
-//         window.onNavigate(ROUTES_PATH.NewBill);
-//         const newBill = new NewBill({
-//           document,
-//           onNavigate,
-//           store: mockStore,
-//           localStorage: window.localStorage,
-//         });
-//         newBill.fileUrl = "test";
-
-//         const form = screen.getAllByTestId("form-new-bill")[0];
-//         const handleSubmit = jest.fn((e) => newBill.handleSubmit(e));
-//         form.addEventListener("submit", handleSubmit);
-//         fireEvent.submit(form);
-//         expect(handleSubmit).toHaveBeenCalled();
-//         await new Promise(process.nextTick);
-//         expect(console.error).toHaveBeenCalledWith(new Error("Erreur 404"));
-//       });
-//       test("fetches bills from an API and fails with 500 message error", async () => {
-//         mockStore.bills.mockImplementationOnce(() => {
-//           return {
-//             update: () => {
-//               return Promise.reject(new Error("Erreur 500"));
-//             },
-//           };
-//         });
-//         window.onNavigate(ROUTES_PATH.NewBill);
-//         const newBill = new NewBill({
-//           document,
-//           onNavigate,
-//           store: mockStore,
-//           localStorage: window.localStorage,
-//         });
-//         newBill.fileUrl = "test";
-//         const form = screen.getAllByTestId("form-new-bill")[0];
-//         const handleSubmit = jest.fn((e) => newBill.handleSubmit(e));
-//         form.addEventListener("submit", handleSubmit);
-//         fireEvent.submit(form);
-//         expect(handleSubmit).toHaveBeenCalled();
-//         await new Promise(process.nextTick);
-//         expect(console.error).toHaveBeenCalledWith(new Error("Erreur 500"));
-//       });
-//     });
-//   });
-// });

@@ -36,7 +36,7 @@ describe("Given I am connected as an employee", () => {
       expect(windowIcon.classList.contains("active-icon")).toBe(true);
     });
     test("Then bills should be ordered from earliest to latest", () => {
-      //construction du DOM
+      //Affiche la view
       document.body.innerHTML = BillsUI({ data: bills });
       //récupère toutes les dates écrites de cette façon
       const dates = screen.getAllByText(/^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$/i).map((a) => a.innerHTML);
@@ -87,16 +87,25 @@ describe("Given I am a user connected as Employee", () => {
   describe("When I navigate to Bills", () => {
     test("fetches bills from mock API GET", async () => {
       // création du localStorage avec le profil employé
-      localStorage.setItem("user", JSON.stringify({ type: "Employee", email: "a@a" }));
-      //création du DOM
+      const mockedBills = mockStore.bills();
+      jest.spyOn(mockStore, "bills");
+      const listMock = jest.fn(mockedBills.list);
+      mockStore.bills.mockImplementationOnce(() => {
+        return {
+          list: listMock,
+        };
+      });
+
       const root = document.createElement("div");
       root.setAttribute("id", "root");
       document.body.append(root);
       router();
+      localStorage.setItem("user", JSON.stringify({ type: "Employee", email: "a@a" }));
       window.onNavigate(ROUTES_PATH.Bills);
-      // vérifie que mes notes de frais s'affiche sur l'écran
-      await waitFor(() => expect(screen.getByText("Mes notes de frais")).toBeTruthy());
+      expect(listMock).toHaveBeenCalled();
+      expect(listMock.mock.results[0].value).resolves.toHaveLength(4);
     });
+
     describe("When an error occurs on API", () => {
       beforeEach(() => {
         jest.spyOn(mockStore, "bills");
